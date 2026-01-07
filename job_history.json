@@ -1,0 +1,101 @@
+[
+  {
+    "job_id": 0,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Bandera\\Bandera.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Bandera\\render\\C_bandera",
+    "total_frames": 250,
+    "completed_frames": 250,
+    "duration": 41.017852783203125,
+    "workers_used": 2,
+    "completed_at": 1767757930.2690022,
+    "datetime": "2026-01-07T00:52:10.269003"
+  },
+  {
+    "job_id": 0,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\Humor.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\render\\C_HUMOR",
+    "total_frames": 250,
+    "completed_frames": 250,
+    "duration": 146.0643925666809,
+    "workers_used": 2,
+    "completed_at": 1767758690.0886543,
+    "datetime": "2026-01-07T01:04:50.088657"
+  },
+  {
+    "job_id": 0,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Bandera\\Bandera.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Bandera\\render\\C_bandera",
+    "total_frames": 250,
+    "completed_frames": 250,
+    "duration": 135.05931091308594,
+    "workers_used": 2,
+    "completed_at": 1767759864.748759,
+    "datetime": "2026-01-07T01:24:24.748760"
+  },
+  {
+    "job_id": 1,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\Humor.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\render\\C_HUMOR",
+    "total_frames": 250,
+    "completed_frames": 250,
+    "duration": 3.001781463623047,
+    "workers_used": 2,
+    "completed_at": 1767759867.773785,
+    "datetime": "2026-01-07T01:24:27.773787"
+  },
+  {
+    "job_id": 0,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\Humor.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\render\\C_HUMOR",
+    "total_frames": 250,
+    "completed_frames": 250,
+    "duration": 70.03962755203247,
+    "workers_used": 2,
+    "completed_at": 1767760818.763863,
+    "datetime": "2026-01-07T01:40:18.763864"
+  },
+  {
+    "job_id": 1,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Bandera\\Bandera.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Bandera\\render\\C_bandera",
+    "total_frames": 250,
+    "completed_frames": 237,
+    "duration": 2.0009562969207764,
+    "workers_used": 2,
+    "completed_at": 1767760821.7670329,
+    "datetime": "2026-01-07T01:40:21.767033"
+  },
+  {
+    "job_id": 0,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Bandera\\Bandera.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Bandera\\render\\C_bandera",
+    "total_frames": 250,
+    "completed_frames": 250,
+    "duration": 56.02803945541382,
+    "workers_used": 2,
+    "completed_at": 1767761373.958174,
+    "datetime": "2026-01-07T01:49:33.958174"
+  },
+  {
+    "job_id": 1,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\Humor.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\render\\C_HUMOR",
+    "total_frames": 250,
+    "completed_frames": 250,
+    "duration": 72.03371930122375,
+    "workers_used": 2,
+    "completed_at": 1767761450.0169628,
+    "datetime": "2026-01-07T01:50:50.016965"
+  },
+  {
+    "job_id": 2,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Bandera\\Bandera.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Bandera\\render\\C_bandera",
+    "total_frames": 250,
+    "completed_frames": 250,
+    "duration": 45.01571035385132,
+    "workers_used": 2,
+    "completed_at": 1767761794.128273,
+    "datetime": "2026-01-07T01:56:34.128273"
+  }
+]

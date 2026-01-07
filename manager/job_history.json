@@ -1,0 +1,24 @@
+[
+  {
+    "job_id": 0,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\Humor.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\render\\C_HUMOR",
+    "total_frames": 130,
+    "completed_frames": 130,
+    "duration": 59.01911926269531,
+    "workers_used": 2,
+    "completed_at": 1767742467.8365366,
+    "datetime": "2026-01-06T20:34:27.836537"
+  },
+  {
+    "job_id": 0,
+    "blend_file": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\Humor.blend",
+    "output_path": "Z:\\projects\\OLMUE2026\\Corporativos\\Humor\\render\\C_HUMOR",
+    "total_frames": 130,
+    "completed_frames": 130,
+    "duration": 28.011636972427368,
+    "workers_used": 2,
+    "completed_at": 1767743105.3570943,
+    "datetime": "2026-01-06T20:45:05.357095"
+  }
+]

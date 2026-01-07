@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Render Manager Pro - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #151b2e;
+            --bg-card: #1a2238;
+            --accent-cyan: #00d9ff;
+            --accent-purple: #b794f6;
+            --accent-green: #00ff88;
+            --accent-orange: #ff6b35;
+            --accent-red: #ff4757;
+            --text-primary: #e8eaf6;
+            --text-secondary: #8b92b8;
+            --border-color: #2a3555;
+            --shadow: 0 8px 32px rgba(0, 217, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #151b2e 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 217, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(183, 148, 246, 0.05) 0%, transparent 50%);
+            animation: bgPulse 20s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-2%, -2%) scale(1.05); }
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: rgba(26, 34, 56, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-brand h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-stats {
+            display: flex;
+            gap: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .nav-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .nav-stat-label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .nav-stat-value {
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .tab:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 217, 255, 0.25);
+            border-color: var(--accent-cyan);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .worker-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .worker-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-cyan);
+        }
+
+        .worker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        .worker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .worker-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .worker-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .status-ready { background: rgba(0, 217, 255, 0.1); color: var(--accent-cyan); }
+        .status-rendering { background: rgba(255, 107, 53, 0.1); color: var(--accent-orange); }
+        .status-done { background: rgba(0, 255, 136, 0.1); color: var(--accent-green); }
+        .status-offline { background: rgba(255, 71, 87, 0.1); color: var(--accent-red); }
+        .status-warning { background: rgba(255, 107, 53, 0.1); color: var(--accent-orange); }
+
+        .worker-info {
+            display: grid;
+            gap: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .worker-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .log-container {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .log-entry {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid;
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+
+        .log-info { border-color: var(--accent-cyan); }
+        .log-warning { border-color: var(--accent-orange); }
+        .log-error { border-color: var(--accent-red); }
+        .log-success { border-color: var(--accent-green); }
+
+        .log-time {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+        }
+
+        .alert-container {
+            position: fixed;
+            top: 5rem;
+            right: 2rem;
+            max-width: 400px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .alert {
+            background: var(--bg-card);
+            border: 1px solid;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .alert:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        @keyframes slideLeft {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .alert-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .alert:hover .alert-close {
+            opacity: 1;
+        }
+
+        .alert-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .alert-info { border-color: var(--accent-cyan); }
+        .alert-warning { border-color: var(--accent-orange); }
+        .alert-error { border-color: var(--accent-red); }
+        .alert-success { border-color: var(--accent-green); }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .job-history-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .job-history-item:hover {
+            border-color: var(--accent-cyan);
+            transform: translateX(4px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .flex-between-center {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .job-info-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .job-detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 217, 255, 0.4);
+        }
+
+        .btn-control {
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-control:hover {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+
+        .project-card {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            background: var(--bg-card);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 8px 32px rgba(0, 217, 255, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .project-card-image {
+            flex: 1;
+            background: linear-gradient(135deg, #1a2238 0%, #0f1419 100%);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 1rem;
+            color: white;
+        }
+
+        .project-card-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin: 0;
+            color: var(--accent-cyan);
+        }
+
+        .project-card-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0 0 0;
+        }
+
+        .history-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-card);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .history-card:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 8px 32px rgba(0, 217, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .history-card-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #1a2238 0%, #0f1419 100%);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .history-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .history-card-content {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .history-card-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--accent-cyan);
+            margin: 0;
+            word-break: break-word;
+        }
+
+        .history-card-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .nav-stats { display: none; }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-cyan);
+            border-radius: 4px;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .preview-item:hover {
+            border-color: var(--accent-cyan);
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(0, 217, 255, 0.3);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0.5rem;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Modal Frames - Square aspect ratio */
+        #modalFramesContainer .preview-item {
+            aspect-ratio: 1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .modal-image {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 217, 255, 0.4);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-cyan);
+        }
+
+        .status-green {
+            background: rgba(0, 255, 136, 0.2) !important;
+            border-color: var(--accent-green) !important;
+            color: var(--accent-green) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-brand">
+            <h1>🎬 Render Manager Pro</h1>
+        </div>
+        <div class="nav-stats">
+            <div class="nav-stat">
+                <div class="nav-stat-label">Workers Activos</div>
+                <div class="nav-stat-value" id="navWorkers">0</div>
+            </div>
+            <div class="nav-stat">
+                <div class="nav-stat-label">Jobs Completados</div>
+                <div class="nav-stat-value" id="navJobs">0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert-container" id="alertContainer"></div>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('overview')">📊 Vista General</div>
+            <div class="tab" onclick="switchTab('workers')">💻 Workers</div>
+            <div class="tab" onclick="switchTab('history')">📚 Historial</div>
+            <div class="tab" onclick="switchTab('logs')">📝 Logs</div>
+        </div>
+
+        <!-- OVERVIEW TAB -->
+        <div id="tab-overview" class="tab-content active">
+            <div class="grid grid-3">
+                <div class="card stat-card">
+                    <div class="stat-value" id="statWorkers">0</div>
+                    <div class="stat-label">Workers Online</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value" id="statJobs">0</div>
+                    <div class="stat-label">Jobs Completados</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-value" id="statUptime">0h</div>
+                    <div class="stat-label">Tiempo de Actividad</div>
+                </div>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">🎯 Job Actual</div>
+                        <span class="worker-status" id="managerStatus">Free</span>
+                    </div>
+                    <div id="currentJobInfo">
+                        <p class="empty-state">No hay trabajo en progreso</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">⏳ Cola de Trabajos</div>
+                        <span class="worker-status status-warning" id="queueCount">0</span>
+                    </div>
+                    <div id="queueInfo"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⚡ Workers Activos</div>
+                </div>
+                <div class="worker-grid" id="workersOverview"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🖼️ Frames Renderizados</div>
+                    <span class="worker-status status-green" id="framesCount">0</span>
+                </div>
+                <div id="previewGallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; padding: 1rem 0;"></div>
+            </div>
+        </div>
+
+        <!-- WORKERS TAB -->
+        <div id="tab-workers" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">💻 Todos los Workers</div>
+                </div>
+                <div class="worker-grid" id="workersDetailed"></div>
+            </div>
+        </div>
+
+        <!-- HISTORY TAB -->
+        <div id="tab-history" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📚 Historial de Jobs</div>
+                </div>
+                <div id="jobHistory"></div>
+            </div>
+        </div>
+
+        <!-- LOGS TAB -->
+        <div id="tab-logs" class="tab-content">
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">📝 Actividad Reciente</div>
+                    </div>
+                    <div class="log-container" id="activityLog"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">⚠️ Errores</div>
+                    </div>
+                    <div class="log-container" id="errorLog"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let startTime = Date.now();
+
+        // Tab Management
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        // Fetch Data
+        async function fetchData() {
+            try {
+                const [main, history, logs, alerts, queue, preview] = await Promise.all([
+                    fetch(`${API_URL}/`).then(r => r.json()),
+                    fetch(`${API_URL}/history`).then(r => r.json()),
+                    fetch(`${API_URL}/logs`).then(r => r.json()),
+                    fetch(`${API_URL}/alerts`).then(r => r.json()),
+                    fetch(`${API_URL}/queue`).then(r => r.json()),
+                    fetch(`${API_URL}/preview`).then(r => r.json()).catch(() => ({images: []}))
+                ]);
+
+                updateOverview(main);
+                updateWorkers(main.workers);
+                updateHistory(history);
+                updateLogs(logs);
+                updateAlerts(alerts);
+                updateQueue(queue);
+                updatePreview(preview);
+
+                return true;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return false;
+            }
+        }
+
+        // Update Overview
+        function updateOverview(data) {
+            document.getElementById('navWorkers').textContent = data.workers.length;
+            document.getElementById('navJobs').textContent = data.performance_metrics.total_jobs_completed;
+            document.getElementById('statWorkers').textContent = data.workers.length;
+            document.getElementById('statJobs').textContent = data.performance_metrics.total_jobs_completed;
+            
+            const uptime = Math.floor((Date.now() - startTime) / 3600000);
+            document.getElementById('statUptime').textContent = uptime + 'h';
+            
+            const statusEl = document.getElementById('managerStatus');
+            statusEl.textContent = data.manager_state === 'free' ? 'Libre' : 'Trabajando';
+            statusEl.className = `worker-status status-${data.manager_state === 'free' ? 'ready' : 'rendering'}`;
+            
+            const jobInfo = document.getElementById('currentJobInfo');
+            if (data.job.blend_file && data.job_progress) {
+                const p = data.job_progress;
+                jobInfo.innerHTML = `
+                    <div style="margin-bottom: 1rem;"><strong>Archivo:</strong> ${data.job.blend_file}</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${p.progress_percent}%"></div>
+                    </div>
+                    <div class="job-detail-row" style="margin-top: 0.5rem;">
+                        <span>${p.completed_frames}/${p.total_frames} frames</span>
+                        <span>${p.progress_percent.toFixed(1)}%</span>
+                    </div>
+                    <div style="margin-top: 1rem; display: grid; gap: 0.5rem;">
+                        <div class="job-detail-row">
+                            <span>Transcurrido:</span>
+                            <span>${formatTime(p.elapsed_time)}</span>
+                        </div>
+                        <div class="job-detail-row">
+                            <span>Estimado:</span>
+                            <span>${formatTime(p.estimated_remaining)}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                jobInfo.innerHTML = '<p class="empty-state">No hay trabajo en progreso</p>';
+            }
+            
+            updateWorkersGrid('workersOverview', data.workers);
+        }
+
+        // Update Workers
+        function updateWorkers(workers) {
+            updateWorkersGrid('workersDetailed', workers);
+        }
+
+        function updateWorkersGrid(elementId, workers) {
+            const container = document.getElementById(elementId);
+            
+            if (workers.length === 0) {
+                container.innerHTML = '<div class="empty-state">No hay workers</div>';
+                return;
+            }
+
+            container.innerHTML = workers.map(w => {
+                const uptime = Math.floor((Date.now()/1000 - w.connected_at) / 60);
+                const statusClass = `status-${w.status}`;
+                const statusText = {'ready': 'Listo', 'rendering': 'Renderizando', 'done': 'Completado'}[w.status] || w.status;
+
+                return `
+                    <div class="worker-card">
+                        <div class="worker-header">
+                            <div class="worker-name">${w.name}</div>
+                            <div class="worker-status ${statusClass}">${statusText}</div>
+                        </div>
+                        <div class="worker-info">
+                            <div class="worker-info-row">
+                                <span>Frames:</span>
+                                <span>${w.frames_rendered || 0}</span>
+                            </div>
+                            <div class="worker-info-row">
+                                <span>Jobs:</span>
+                                <span>${w.jobs_completed || 0}</span>
+                            </div>
+                            <div class="worker-info-row">
+                                <span>Uptime:</span>
+                                <span>${uptime}m</span>
+                            </div>
+                            ${w.ip ? `<div class="worker-info-row"><span>IP:</span><span>${w.ip}</span></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update Performance
+        function updatePerformance(stats) {
+            // Removed - Performance tab deleted
+        }
+
+        function updateHistory(data) {
+            const container = document.getElementById('jobHistory');
+            
+            if (data.jobs.length === 0) {
+                container.innerHTML = '<div class="empty-state">No hay historial</div>';
+                return;
+            }
+
+            container.innerHTML = data.jobs.reverse().map(job => `
+                <div class="job-history-item">
+                    <div class="job-info-header">
+                        <strong>${job.blend_file}</strong>
+                        <span style="color: var(--accent-green);">✓ Completado</span>
+                    </div>
+                    <div class="job-info-grid">
+                        <div>
+                            <div style="color: var(--text-secondary);">Frames</div>
+                            <div>${job.completed_frames}/${job.total_frames}</div>
+                        </div>
+                        <div>
+                            <div style="color: var(--text-secondary);">Duración</div>
+                            <div>${formatTime(job.duration)}</div>
+                        </div>
+                        <div>
+                            <div style="color: var(--text-secondary);">Workers</div>
+                            <div>${job.workers_used}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update Logs
+        function updateLogs(data) {
+            const activityContainer = document.getElementById('activityLog');
+            const errorContainer = document.getElementById('errorLog');
+
+            activityContainer.innerHTML = (data.activity.length > 0)
+                ? data.activity.reverse().slice(0, 50).map(log => `
+                    <div class="log-entry log-${log.level}">
+                        <span class="log-time">${new Date(log.datetime).toLocaleTimeString()}</span>
+                        ${log.message}
+                    </div>
+                `).join('')
+                : '<div class="empty-state">Sin actividad</div>';
+
+            errorContainer.innerHTML = (data.errors.length > 0)
+                ? data.errors.reverse().map(err => `
+                    <div class="log-entry log-error">
+                        <span class="log-time">${new Date(err.datetime).toLocaleTimeString()}</span>
+                        <strong>${err.worker}:</strong> ${err.error}
+                    </div>
+                `).join('')
+                : '<div class="empty-state">Sin errores</div>';
+        }
+
+        // Update Queue
+        function updateQueue(data) {
+            const queueEl = document.getElementById('queueInfo');
+            const queueCount = document.getElementById('queueCount');
+            queueCount.textContent = data.size;
+
+            if (data.size === 0) {
+                queueEl.innerHTML = '<div class="empty-state">Sin trabajos en cola</div>';
+                return;
+            }
+
+            queueEl.innerHTML = data.queue.map((job, index) => `
+                <div class="job-history-item">
+                    <div class="job-info-header">
+                        <strong>#${index + 1} ${job.blend_file.split('\\').pop()}</strong>
+                        <span style="color: var(--accent-orange);">⏳ Esperando</span>
+                    </div>
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-secondary);">
+                        <div>Frames: ${job.total_frames} | ${job.resolution.x}x${job.resolution.y} | ${job.render_engine}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update Preview Gallery
+        function updatePreview(data) {
+            const gallery = document.getElementById('previewGallery');
+            const framesCount = document.getElementById('framesCount');
+            
+            framesCount.textContent = data.images ? data.images.length : 0;
+
+            if (!data.images || data.images.length === 0) {
+                gallery.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;">Sin frames renderizados</div>';
+                return;
+            }
+
+            // Mostrar todas las imágenes (más recientes primero)
+            const lastImages = data.images.slice().reverse();
+            gallery.innerHTML = lastImages.map(img => `
+                <div class="preview-item" onclick="openImageModal('${img}')">
+                    <img src="${API_URL}/preview/${img}" alt="${img}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%2284%22%3E%3Crect fill=%22%23222%22 width=%22150%22 height=%22 84%22/%3E%3C/svg%3E'">
+                    <div class="preview-item-title">${img}</div>
+                </div>
+            `).join('');
+        }
+
+        // Modal de imagen
+        function openImageModal(imageName) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <span class="modal-close" onclick="this.parentElement.remove()">&times;</span>
+                <div class="modal-content">
+                    <img class="modal-image" src="${API_URL}/preview/${imageName}" alt="${imageName}">
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            };
+        }
+
+        // Update Alerts
+        let alertIds = new Set();
+        let activeAlerts = [];
+
+        function updateAlerts(data) {
+            const container = document.getElementById('alertContainer');
+            const newAlerts = data.alerts.filter(a => !alertIds.has(`${a.timestamp}-${a.message}`));
+
+            newAlerts.forEach(alert => {
+                alertIds.add(`${alert.timestamp}-${alert.message}`);
+                const el = document.createElement('div');
+                el.className = `alert alert-${alert.type}`;
+                const icon = {'error': '❌', 'warning': '⚠️', 'success': '✅', 'info': 'ℹ️'}[alert.type] || 'ℹ️';
+                el.innerHTML = `
+                    <div style="font-size: 1.1rem;">${icon}</div>
+                    <div style="flex: 1;"><div style="font-weight: 600;">${alert.message}</div></div>
+                    <div class="alert-close">×</div>
+                `;
+                el.addEventListener('click', () => dismissAlert(el));
+                container.appendChild(el);
+                activeAlerts.push(el);
+                setTimeout(() => { el.style.opacity = '1'; }, 10);
+                setTimeout(() => dismissAlert(el), 8000);
+            });
+
+            while (activeAlerts.length > 3) {
+                dismissAlert(activeAlerts.shift());
+            }
+            
+            if (alertIds.size > 100) {
+                alertIds = new Set(Array.from(alertIds).slice(-50));
+            }
+        }
+
+        function dismissAlert(el) {
+            if (!el || !el.parentNode) return;
+            el.style.opacity = '0';
+            setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+            activeAlerts = activeAlerts.filter(a => a !== el);
+        }
+
+        // Update Charts
+        function updateCharts(stats) {
+            // Removed - Performance tab deleted
+        }
+
+        // Utility Functions
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = Math.floor(seconds % 60);
+            
+            if (h > 0) return `${h}h ${m}m ${s}s`;
+            if (m > 0) return `${m}m ${s}s`;
+            return `${s}s`;
+        }
+
+        // Abrir Dashboard en navegador
+        // Auto-refresh
+        setInterval(fetchData, 5000);  // Reducido a 5 segundos para menor carga
+        fetchData();
+    </script>
+
+</body>
+</html>
