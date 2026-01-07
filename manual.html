@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noctiluca Render - Manual de Usuario</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                var(--bg);
+            z-index: -1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            margin-bottom: 6rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title .number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            font-size: 1.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-icon.manager {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        .card-icon.worker {
+            background: linear-gradient(135deg, #10b981, #14b8a6);
+        }
+
+        .card-icon.addon {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: var(--text-muted);
+        }
+
+        /* Steps */
+        .steps {
+            position: relative;
+        }
+
+        .step {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 60px;
+            bottom: -30px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), transparent);
+        }
+
+        .step:last-child::before {
+            display: none;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-block code {
+            color: #e6edf3;
+        }
+
+        .code-comment {
+            color: #8b949e;
+        }
+
+        .code-string {
+            color: #a5d6ff;
+        }
+
+        .code-keyword {
+            color: #ff7b72;
+        }
+
+        /* Architecture Diagram */
+        .architecture {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .arch-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .arch-box:hover {
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .arch-box .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .arch-box h4 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .arch-box p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+
+        /* State Diagram */
+        .state-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .state-box {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .state-box.free { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .state-box.working { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .state-box.config { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        .state-box.ready { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .state-box.rendering { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .state-box.done { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+        .state-arrow {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+        }
+
+        /* Tips */
+        .tip {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .tip-icon {
+            font-size: 1.5rem;
+        }
+
+        .tip-content h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .warning .tip-content h4 {
+            color: var(--warning);
+        }
+
+        /* Requirements List */
+        .requirements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .req-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .req-item .check {
+            color: var(--success);
+            font-size: 1.25rem;
+        }
+
+        /* File Structure */
+        .file-tree {
+            background: #0d1117;
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .file-tree .folder {
+            color: #7ee787;
+        }
+
+        .file-tree .file {
+            color: #e6edf3;
+        }
+
+        .file-tree .comment {
+            color: #8b949e;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        footer p {
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .step {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .step::before {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-card-hover);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">
+                <span class="logo-icon">🌙</span>
+                <span>Noctiluca Render</span>
+            </a>
+            <ul>
+                <li><a href="#arquitectura">Arquitectura</a></li>
+                <li><a href="#requisitos">Requisitos</a></li>
+                <li><a href="#instalacion">Instalación</a></li>
+                <li><a href="#uso">Uso</a></li>
+                <li><a href="#estados">Estados</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content animate">
+            <h1>Noctiluca Render Batch</h1>
+            <p>Sistema de render distribuido para Blender. Renderiza tus proyectos en múltiples computadores simultáneamente.</p>
+            <div class="hero-buttons">
+                <a href="#instalacion" class="btn btn-primary">
+                    🚀 Comenzar
+                </a>
+                <a href="https://github.com/rzamoraa/noctiluca-render-batch" target="_blank" class="btn btn-secondary">
+                    📦 GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <!-- Arquitectura -->
+        <section id="arquitectura">
+            <h2 class="section-title">
+                <span class="number">📐</span>
+                Arquitectura del Sistema
+            </h2>
+            <p class="section-subtitle">
+                El sistema se compone de 3 elementos principales que trabajan en conjunto.
+            </p>
+
+            <div class="architecture">
+                <div class="arch-box">
+                    <div class="icon">🎨</div>
+                    <h4>Blender + Addon</h4>
+                    <p>Donde trabajas y envías los jobs de render a la cola</p>
+                </div>
+                <div class="arch-box">
+                    <div class="icon">🖥️</div>
+                    <h4>Manager</h4>
+                    <p>Servidor central que coordina todos los workers</p>
+                </div>
+                <div class="arch-box">
+                    <div class="icon">⚙️</div>
+                    <h4>Workers</h4>
+                    <p>PCs que renderizan los frames asignados</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">📁 Estructura de Archivos</h3>
+                <div class="file-tree">
+                    <span class="folder">📁 Manager/</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="file">NoctilucaManager.exe</span> <span class="comment">← Ejecutable principal</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="file">manager.py</span> <span class="comment">← Se descarga automáticamente</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="file">index.html</span> <span class="comment">← Dashboard web</span><br>
+                    <br>
+                    <span class="folder">📁 Worker/</span> <span class="comment">(en cada PC nodo)</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="file">NoctilucaWorker.exe</span> <span class="comment">← Ejecutable principal</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="file">worker_config.xml</span> <span class="comment">← Configuración local</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="file">worker.py</span> <span class="comment">← Se descarga automáticamente</span><br>
+                </div>
+            </div>
+        </section>
+
+        <!-- Requisitos -->
+        <section id="requisitos">
+            <h2 class="section-title">
+                <span class="number">✅</span>
+                Requisitos
+            </h2>
+            <p class="section-subtitle">
+                Asegúrate de tener todo lo necesario antes de comenzar.
+            </p>
+
+            <div class="requirements">
+                <div class="req-item">
+                    <span class="check">✓</span>
+                    <span>Windows 10/11</span>
+                </div>
+                <div class="req-item">
+                    <span class="check">✓</span>
+                    <span>Blender 2.80+</span>
+                </div>
+                <div class="req-item">
+                    <span class="check">✓</span>
+                    <span>Red local (LAN)</span>
+                </div>
+                <div class="req-item">
+                    <span class="check">✓</span>
+                    <span>Conexión a internet</span>
+                </div>
+            </div>
+
+            <div class="tip warning">
+                <span class="tip-icon">⚠️</span>
+                <div class="tip-content">
+                    <h4>Importante</h4>
+                    <p>Todos los PCs deben tener acceso al archivo .blend. Usa una carpeta de red compartida para los proyectos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Instalación -->
+        <section id="instalacion">
+            <h2 class="section-title">
+                <span class="number">📥</span>
+                Instalación
+            </h2>
+            <p class="section-subtitle">
+                Sigue estos pasos para configurar el sistema completo.
+            </p>
+
+            <div class="steps">
+                <!-- Paso 1: Manager -->
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Configurar el Manager (PC Principal)</h3>
+                        <p>El Manager es el servidor central que coordina todo el render.</p>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon manager">🖥️</div>
+                                <h3>NoctilucaManager.exe</h3>
+                            </div>
+                            <ol style="margin-left: 1.5rem; color: var(--text-muted);">
+                                <li style="margin-bottom: 0.5rem;">Copia <code>NoctilucaManager.exe</code> a una carpeta (ej: <code>C:\Noctiluca\</code>)</li>
+                                <li style="margin-bottom: 0.5rem;">Ejecuta como <strong>Administrador</strong> (primera vez)</li>
+                                <li style="margin-bottom: 0.5rem;">El programa descargará automáticamente los archivos necesarios</li>
+                                <li>Se abrirá el Dashboard en <code>http://localhost:8000</code></li>
+                            </ol>
+                        </div>
+
+                        <div class="tip">
+                            <span class="tip-icon">💡</span>
+                            <div class="tip-content">
+                                <h4>Tip</h4>
+                                <p>Anota la IP de este PC (ej: 192.168.1.100). La necesitarás para configurar los Workers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 2: Workers -->
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Configurar los Workers (PCs Nodos)</h3>
+                        <p>Repite esto en cada PC que quieras usar para renderizar.</p>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon worker">⚙️</div>
+                                <h3>NoctilucaWorker.exe</h3>
+                            </div>
+                            <ol style="margin-left: 1.5rem; color: var(--text-muted);">
+                                <li style="margin-bottom: 0.5rem;">Copia <code>NoctilucaWorker.exe</code> y <code>worker_config.xml</code> a una carpeta</li>
+                                <li style="margin-bottom: 0.5rem;">Edita <code>worker_config.xml</code>:</li>
+                            </ol>
+                        </div>
+
+                        <div class="code-block">
+                            <code>
+<span class="code-keyword">&lt;config&gt;</span><br>
+&nbsp;&nbsp;<span class="code-keyword">&lt;manager&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">&lt;ip&gt;</span><span class="code-string">192.168.1.100</span><span class="code-keyword">&lt;/ip&gt;</span> <span class="code-comment">&lt;!-- IP del PC Manager --&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">&lt;port&gt;</span><span class="code-string">8000</span><span class="code-keyword">&lt;/port&gt;</span><br>
+&nbsp;&nbsp;<span class="code-keyword">&lt;/manager&gt;</span><br>
+&nbsp;&nbsp;<span class="code-keyword">&lt;identity&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">&lt;name&gt;</span><span class="code-string">NODO-01</span><span class="code-keyword">&lt;/name&gt;</span> <span class="code-comment">&lt;!-- Nombre único --&gt;</span><br>
+&nbsp;&nbsp;<span class="code-keyword">&lt;/identity&gt;</span><br>
+&nbsp;&nbsp;<span class="code-keyword">&lt;blender&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">&lt;path&gt;</span><span class="code-string">C:\Program Files\Blender Foundation\Blender 4.5\blender.exe</span><span class="code-keyword">&lt;/path&gt;</span><br>
+&nbsp;&nbsp;<span class="code-keyword">&lt;/blender&gt;</span><br>
+<span class="code-keyword">&lt;/config&gt;</span>
+                            </code>
+                        </div>
+
+                        <ol start="3" style="margin-left: 1.5rem; color: var(--text-muted);">
+                            <li style="margin-bottom: 0.5rem;">Ejecuta <code>NoctilucaWorker.exe</code> como <strong>Administrador</strong></li>
+                            <li>Verifica que aparezca en el Dashboard del Manager</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Addon -->
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Instalar el Addon de Blender</h3>
+                        <p>El addon te permite enviar jobs directamente desde Blender.</p>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon addon">🎨</div>
+                                <h3>noctiluca_render_manager.py</h3>
+                            </div>
+                            <ol style="margin-left: 1.5rem; color: var(--text-muted);">
+                                <li style="margin-bottom: 0.5rem;">Abre Blender</li>
+                                <li style="margin-bottom: 0.5rem;">Ve a <code>Edit → Preferences → Add-ons → Install</code></li>
+                                <li style="margin-bottom: 0.5rem;">Selecciona <code>noctiluca_render_manager.py</code></li>
+                                <li style="margin-bottom: 0.5rem;">Activa el addon "Noctiluca Render Manager"</li>
+                                <li>Configura la IP del Manager en las preferencias del addon</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Uso -->
+        <section id="uso">
+            <h2 class="section-title">
+                <span class="number">🎬</span>
+                Cómo Usar
+            </h2>
+            <p class="section-subtitle">
+                Proceso para renderizar un proyecto en la granja.
+            </p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Inicia el Sistema</h3>
+                        <p>Primero el Manager, luego los Workers.</p>
+                        <div class="requirements" style="margin-top: 1rem;">
+                            <div class="req-item">
+                                <span>🖥️</span>
+                                <span>Ejecutar NoctilucaManager.exe</span>
+                            </div>
+                            <div class="req-item">
+                                <span>⚙️</span>
+                                <span>Ejecutar NoctilucaWorker.exe (en cada nodo)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Verifica Conexiones</h3>
+                        <p>Abre el Dashboard en <code>http://localhost:8000</code> y verifica que todos los Workers aparezcan con estado <strong style="color: var(--success);">READY</strong>.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Envía el Job desde Blender</h3>
+                        <p>En Blender, abre el panel lateral (tecla N) y busca la pestaña "Noctiluca". Configura:</p>
+                        <div class="requirements" style="margin-top: 1rem;">
+                            <div class="req-item">
+                                <span>📁</span>
+                                <span>Ruta del archivo .blend</span>
+                            </div>
+                            <div class="req-item">
+                                <span>📂</span>
+                                <span>Carpeta de salida</span>
+                            </div>
+                            <div class="req-item">
+                                <span>🎞️</span>
+                                <span>Frame inicial y final</span>
+                            </div>
+                            <div class="req-item">
+                                <span>⚡</span>
+                                <span>Motor de render</span>
+                            </div>
+                        </div>
+                        <p style="margin-top: 1rem;">Presiona <strong>"Enviar a Render"</strong></p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Monitorea el Progreso</h3>
+                        <p>Observa el Dashboard mientras los Workers renderizan. Verás:</p>
+                        <ul style="margin-left: 1.5rem; color: var(--text-muted); margin-top: 1rem;">
+                            <li>Estado de cada Worker</li>
+                            <li>Frame actual siendo renderizado</li>
+                            <li>Progreso general del job</li>
+                            <li>Tiempo estimado</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>¡Listo!</h3>
+                        <p>Cuando todos los frames estén renderizados, el job pasará al historial y el sistema quedará listo para el siguiente trabajo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estados -->
+        <section id="estados">
+            <h2 class="section-title">
+                <span class="number">🔄</span>
+                Sistema de Estados
+            </h2>
+            <p class="section-subtitle">
+                Entender los estados te ayudará a diagnosticar problemas.
+            </p>
+
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">Estados del Manager</h3>
+                <div class="state-flow">
+                    <div class="state-box free">FREE</div>
+                    <span class="state-arrow">→</span>
+                    <div class="state-box working">WORKING</div>
+                    <span class="state-arrow">→</span>
+                    <div class="state-box config">CONFIG</div>
+                    <span class="state-arrow">→</span>
+                    <span style="color: var(--text-muted);">(vuelve a FREE)</span>
+                </div>
+                <ul style="margin-left: 1.5rem; color: var(--text-muted);">
+                    <li><strong style="color: var(--success);">FREE:</strong> Esperando jobs. Verifica que todos los workers estén READY.</li>
+                    <li><strong style="color: var(--warning);">WORKING:</strong> Job en proceso. Workers están renderizando.</li>
+                    <li><strong style="color: var(--primary);">CONFIG:</strong> Guardando resultados. Preparando siguiente job.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">Estados de los Workers</h3>
+                <div class="state-flow">
+                    <div class="state-box ready">READY</div>
+                    <span class="state-arrow">→</span>
+                    <div class="state-box rendering">RENDERING</div>
+                    <span class="state-arrow">→</span>
+                    <div class="state-box done">DONE</div>
+                    <span class="state-arrow">→</span>
+                    <span style="color: var(--text-muted);">(vuelve a READY)</span>
+                </div>
+                <ul style="margin-left: 1.5rem; color: var(--text-muted);">
+                    <li><strong style="color: var(--success);">READY:</strong> Esperando trabajo.</li>
+                    <li><strong style="color: var(--error);">RENDERING:</strong> Blender está renderizando un frame.</li>
+                    <li><strong style="color: #8b5cf6;">DONE:</strong> Terminó su trabajo. Espera a los demás workers.</li>
+                </ul>
+            </div>
+
+            <div class="tip">
+                <span class="tip-icon">💡</span>
+                <div class="tip-content">
+                    <h4>¿Por qué no inicia el render?</h4>
+                    <p>El Manager solo toma un job de la cola cuando <strong>TODOS</strong> los workers están en estado READY. Si un worker está en DONE o RENDERING, espera.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Auto Update -->
+        <section id="actualizacion">
+            <h2 class="section-title">
+                <span class="number">🔄</span>
+                Actualización Automática
+            </h2>
+            <p class="section-subtitle">
+                El sistema se actualiza solo. Sin complicaciones.
+            </p>
+
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">¿Cómo funciona?</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                    Cada vez que inicias un ejecutable (.exe), este se conecta a GitHub y descarga la última versión del código.
+                </p>
+                <div class="requirements">
+                    <div class="req-item">
+                        <span>✅</span>
+                        <span>manager.py - Auto-update</span>
+                    </div>
+                    <div class="req-item">
+                        <span>✅</span>
+                        <span>worker.py - Auto-update</span>
+                    </div>
+                    <div class="req-item">
+                        <span>✅</span>
+                        <span>index.html - Auto-update</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip">
+                <span class="tip-icon">🔄</span>
+                <div class="tip-content">
+                    <h4>Para actualizar</h4>
+                    <p>Simplemente cierra y vuelve a abrir el ejecutable. Si hay una nueva versión, la descargará automáticamente.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Troubleshooting -->
+        <section id="problemas">
+            <h2 class="section-title">
+                <span class="number">🔧</span>
+                Solución de Problemas
+            </h2>
+            <p class="section-subtitle">
+                Problemas comunes y cómo resolverlos.
+            </p>
+
+            <div class="card">
+                <h3>❌ Worker no conecta</h3>
+                <ul style="margin-left: 1.5rem; color: var(--text-muted); margin-top: 0.5rem;">
+                    <li>Verifica la IP del Manager en <code>worker_config.xml</code></li>
+                    <li>Asegúrate que el firewall permita el puerto 8000</li>
+                    <li>Confirma que el Manager esté ejecutándose</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>❌ Render no inicia</h3>
+                <ul style="margin-left: 1.5rem; color: var(--text-muted); margin-top: 0.5rem;">
+                    <li>Verifica la ruta de Blender en <code>worker_config.xml</code></li>
+                    <li>Confirma que el archivo .blend sea accesible desde el Worker</li>
+                    <li>Revisa que todos los Workers estén en READY</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>❌ No se actualiza</h3>
+                <ul style="margin-left: 1.5rem; color: var(--text-muted); margin-top: 0.5rem;">
+                    <li>Ejecuta como <strong>Administrador</strong></li>
+                    <li>Verifica conexión a internet</li>
+                    <li>Mueve la carpeta fuera de <code>C:\Program Files</code></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p style="font-size: 2rem; margin-bottom: 1rem;">🌙</p>
+        <p style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">Noctiluca Render Batch</p>
+        <p style="margin-bottom: 1rem;">Sistema de render distribuido para Blender</p>
+        <p>
+            <a href="https://github.com/rzamoraa/noctiluca-render-batch" target="_blank">GitHub</a>
+            &nbsp;•&nbsp;
+            Creado por Rodolfo Zamora
+        </p>
+        <p style="margin-top: 2rem; font-size: 0.9rem;">v1.1 • 2026</p>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animate on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
