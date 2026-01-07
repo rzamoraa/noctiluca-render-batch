@@ -7,6 +7,16 @@ from datetime import datetime
 import webbrowser
 import os
 import xml.etree.ElementTree as ET
+import ctypes
+import sys
+
+# ============ VERSION ============
+VERSION = "1.1"
+# =================================
+
+# Establecer título de la consola
+if sys.platform == "win32":
+    ctypes.windll.kernel32.SetConsoleTitleW(f"Noctiluca Manager v{VERSION}")
 
 HOST = "0.0.0.0"
 PORT = 8000
@@ -555,6 +565,9 @@ class Handler(BaseHTTPRequestHandler):
         else:
             self.send_error(404)
 
+print("=" * 50)
+print(f"  NOCTILUCA MANAGER v{VERSION}")
+print("=" * 50)
 print(f"[START] Render Manager iniciado en http://localhost:{PORT}")
 log_activity("Manager iniciado", "success")
 
