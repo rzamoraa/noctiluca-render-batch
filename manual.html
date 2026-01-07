@@ -592,6 +592,8 @@
             <ul>
                 <li><a href="#arquitectura">Arquitectura</a></li>
                 <li><a href="#requisitos">Requisitos</a></li>
+                <li><a href="#red">Red</a></li>
+                <li><a href="#estructura-proyecto">Proyecto</a></li>
                 <li><a href="#instalacion">Instalación</a></li>
                 <li><a href="#uso">Uso</a></li>
                 <li><a href="#estados">Estados</a></li>
@@ -694,6 +696,254 @@
                 <div class="tip-content">
                     <h4>Importante</h4>
                     <p>Todos los PCs deben tener acceso al archivo .blend. Usa una carpeta de red compartida para los proyectos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuración de Red - CRÍTICO -->
+        <section id="red">
+            <h2 class="section-title">
+                <span class="number">🌐</span>
+                Configuración de Red (CRÍTICO)
+            </h2>
+            <p class="section-subtitle">
+                Esta es la parte más importante. Si no configuras esto correctamente, el sistema NO funcionará.
+            </p>
+
+            <div class="tip warning" style="margin-bottom: 2rem;">
+                <span class="tip-icon">🚨</span>
+                <div class="tip-content">
+                    <h4>¡LEE ESTO PRIMERO!</h4>
+                    <p>Todos los computadores (Manager y Workers) DEBEN tener acceso a la misma carpeta de red con la <strong>MISMA LETRA DE UNIDAD</strong>. Por ejemplo: <code>Z:\</code> en todos los PCs.</p>
+                </div>
+            </div>
+
+            <div class="steps">
+                <!-- Paso 1: Crear carpeta compartida -->
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Crear Carpeta Compartida en el PC Principal</h3>
+                        <p>Elige un PC (puede ser el Manager) que tenga suficiente espacio en disco.</p>
+                        
+                        <div class="card">
+                            <ol style="margin-left: 1.5rem; color: var(--text-muted);">
+                                <li style="margin-bottom: 0.5rem;">Crea una carpeta, por ejemplo: <code>D:\RenderProjects</code></li>
+                                <li style="margin-bottom: 0.5rem;">Clic derecho → <strong>Propiedades</strong> → pestaña <strong>Compartir</strong></li>
+                                <li style="margin-bottom: 0.5rem;">Clic en <strong>Compartir...</strong> → Agrega <strong>Todos</strong> con permisos de <strong>Lectura/Escritura</strong></li>
+                                <li style="margin-bottom: 0.5rem;">Clic en <strong>Uso compartido avanzado</strong> → Marca <strong>"Compartir esta carpeta"</strong></li>
+                                <li>Anota la ruta de red: <code>\\NOMBRE-PC\RenderProjects</code></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 2: Mapear unidad de red -->
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Mapear la Unidad de Red en TODOS los PCs</h3>
+                        <p>Repite esto en el Manager y en CADA Worker. <strong>USA LA MISMA LETRA EN TODOS.</strong></p>
+                        
+                        <div class="card">
+                            <ol style="margin-left: 1.5rem; color: var(--text-muted);">
+                                <li style="margin-bottom: 0.5rem;">Abre el <strong>Explorador de Windows</strong></li>
+                                <li style="margin-bottom: 0.5rem;">Clic en <strong>Este equipo</strong> (o "Mi PC")</li>
+                                <li style="margin-bottom: 0.5rem;">En la cinta superior: <strong>Equipo</strong> → <strong>Conectar a unidad de red</strong></li>
+                                <li style="margin-bottom: 0.5rem;">Selecciona letra <strong>Z:</strong> (o la que prefieras)</li>
+                                <li style="margin-bottom: 0.5rem;">En carpeta escribe: <code>\\NOMBRE-PC\RenderProjects</code></li>
+                                <li style="margin-bottom: 0.5rem;">Marca ✅ <strong>"Conectar de nuevo al iniciar sesión"</strong></li>
+                                <li>Clic en <strong>Finalizar</strong></li>
+                            </ol>
+                        </div>
+
+                        <div class="tip">
+                            <span class="tip-icon">💡</span>
+                            <div class="tip-content">
+                                <h4>Verifica la conexión</h4>
+                                <p>Abre <code>Z:\</code> en cada PC y confirma que puedes ver y crear archivos. Si no funciona, revisa el firewall y los permisos de compartir.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Por qué es importante -->
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>¿Por qué debe ser la MISMA letra?</h3>
+                        <p>Cuando Blender guarda un proyecto, las rutas de texturas y archivos se guardan <strong>absolutas</strong>.</p>
+                        
+                        <div class="card" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3);">
+                            <h4 style="color: #ef4444; margin-bottom: 0.5rem;">❌ Esto NO funcionará:</h4>
+                            <div class="file-tree" style="background: rgba(0,0,0,0.3);">
+                                <span class="comment"># PC Manager tiene el proyecto en:</span><br>
+                                <span class="file">C:\Users\Juan\proyecto.blend</span><br><br>
+                                <span class="comment"># PC Worker busca el archivo en:</span><br>
+                                <span class="file">C:\Users\Juan\proyecto.blend</span> <span style="color: #ef4444;">← ¡No existe en este PC!</span>
+                            </div>
+                        </div>
+
+                        <div class="card" style="background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.3); margin-top: 1rem;">
+                            <h4 style="color: #22c55e; margin-bottom: 0.5rem;">✅ Esto SÍ funcionará:</h4>
+                            <div class="file-tree" style="background: rgba(0,0,0,0.3);">
+                                <span class="comment"># PC Manager tiene el proyecto en:</span><br>
+                                <span class="file">Z:\MiProyecto\proyecto.blend</span><br><br>
+                                <span class="comment"># PC Worker busca el archivo en:</span><br>
+                                <span class="file">Z:\MiProyecto\proyecto.blend</span> <span style="color: #22c55e;">← ✓ ¡Existe! Es la misma carpeta de red</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Estructura del Proyecto - CRÍTICO -->
+        <section id="estructura-proyecto">
+            <h2 class="section-title">
+                <span class="number">📁</span>
+                Estructura del Proyecto (CRÍTICO)
+            </h2>
+            <p class="section-subtitle">
+                Tu proyecto de Blender debe seguir esta estructura para que todo funcione correctamente.
+            </p>
+
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">📂 Estructura Obligatoria</h3>
+                <div class="file-tree">
+                    <span class="folder">📁 Z:\MiProyecto\</span> <span class="comment">← Carpeta raíz del proyecto</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="file">📄 escena.blend</span> <span class="comment">← Tu archivo de Blender</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="folder">📁 texturas\</span> <span class="comment">← Todas las texturas aquí</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">🖼️ diffuse.png</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">🖼️ normal.png</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">🖼️ ...</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="folder">📁 render\</span> <span class="comment">← ⚠️ OBLIGATORIO - Aquí van los frames renderizados</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">🖼️ frame_0001.png</span> <span class="comment">← Se generan automáticamente</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">🖼️ frame_0002.png</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">🖼️ ...</span><br>
+                </div>
+            </div>
+
+            <div class="tip warning" style="margin: 2rem 0;">
+                <span class="tip-icon">🚨</span>
+                <div class="tip-content">
+                    <h4>¡La carpeta "render" es OBLIGATORIA!</h4>
+                    <p>El Dashboard web busca las imágenes renderizadas en una carpeta llamada <strong>"render"</strong> dentro de la carpeta del proyecto. Si no existe o tiene otro nombre, <strong>no podrás ver la galería de imágenes</strong> en el Dashboard.</p>
+                </div>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Preparar el Proyecto de Blender</h3>
+                        
+                        <div class="card">
+                            <ol style="margin-left: 1.5rem; color: var(--text-muted);">
+                                <li style="margin-bottom: 0.5rem;">Crea tu carpeta de proyecto en la unidad de red: <code>Z:\MiProyecto\</code></li>
+                                <li style="margin-bottom: 0.5rem;">Guarda tu archivo .blend en esa carpeta</li>
+                                <li style="margin-bottom: 0.5rem;">Crea una subcarpeta llamada exactamente <strong>"render"</strong>: <code>Z:\MiProyecto\render\</code></li>
+                                <li style="margin-bottom: 0.5rem;">Coloca todas las texturas en la carpeta del proyecto (o en una subcarpeta "texturas")</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Configurar la Salida de Render en Blender</h3>
+                        <p>Es CRÍTICO que la ruta de salida apunte a la carpeta "render".</p>
+                        
+                        <div class="card">
+                            <ol style="margin-left: 1.5rem; color: var(--text-muted);">
+                                <li style="margin-bottom: 0.5rem;">En Blender, ve a <strong>Properties</strong> → <strong>Output Properties</strong> (ícono de impresora)</li>
+                                <li style="margin-bottom: 0.5rem;">En <strong>"Output"</strong>, configura la ruta:</li>
+                            </ol>
+                            
+                            <div class="code-block">
+                                <code>
+<span class="code-string">Z:\MiProyecto\render\frame_</span>
+                                </code>
+                            </div>
+                            
+                            <p style="color: var(--text-muted); margin-top: 1rem;">
+                                Blender agregará automáticamente el número de frame: <code>frame_0001.png</code>, <code>frame_0002.png</code>, etc.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Empaquetar Texturas (Recomendado)</h3>
+                        <p>Para evitar problemas con rutas de texturas, empaqueta todo en el .blend.</p>
+                        
+                        <div class="card">
+                            <ol style="margin-left: 1.5rem; color: var(--text-muted);">
+                                <li style="margin-bottom: 0.5rem;">En Blender: <strong>File</strong> → <strong>External Data</strong> → <strong>Pack Resources</strong></li>
+                                <li style="margin-bottom: 0.5rem;">Guarda el archivo</li>
+                                <li>Ahora todas las texturas están dentro del .blend</li>
+                            </ol>
+                        </div>
+
+                        <div class="tip">
+                            <span class="tip-icon">💡</span>
+                            <div class="tip-content">
+                                <h4>Alternativa: Rutas Relativas</h4>
+                                <p>En Blender: <strong>File</strong> → <strong>External Data</strong> → <strong>Make All Paths Relative</strong>. Así las texturas se buscan relativas al .blend, no con rutas absolutas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo visual completo -->
+            <div class="card" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1rem;">📋 Ejemplo Completo</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <h4 style="color: var(--text-muted); margin-bottom: 0.5rem;">Estructura en disco:</h4>
+                        <div class="file-tree">
+                            <span class="folder">Z:\</span><br>
+                            &nbsp;&nbsp;<span class="folder">└── Comercial_Toyota\</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">├── comercial.blend</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="folder">├── texturas\</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">│&nbsp;&nbsp;&nbsp;├── carro_diffuse.png</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">│&nbsp;&nbsp;&nbsp;└── carro_normal.png</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="folder">└── render\</span> <span class="comment">← ¡Crear antes!</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">├── frame_0001.png</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">├── frame_0002.png</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">└── ...</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--text-muted); margin-bottom: 0.5rem;">En el Addon de Blender:</h4>
+                        <div class="file-tree">
+                            <span class="comment"># Archivo .blend:</span><br>
+                            <span class="code-string">Z:\Comercial_Toyota\comercial.blend</span><br><br>
+                            <span class="comment"># Output Path:</span><br>
+                            <span class="code-string">Z:\Comercial_Toyota\render\frame_</span><br><br>
+                            <span class="comment"># Frames:</span><br>
+                            <span class="code-string">1 - 250</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip" style="margin-top: 2rem;">
+                <span class="tip-icon">✅</span>
+                <div class="tip-content">
+                    <h4>Checklist antes de renderizar</h4>
+                    <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                        <li>☑️ El proyecto está en la unidad de red (Z:\)</li>
+                        <li>☑️ Todos los PCs tienen la misma letra de unidad mapeada</li>
+                        <li>☑️ Existe la carpeta "render" dentro del proyecto</li>
+                        <li>☑️ La ruta de Output en Blender apunta a la carpeta "render"</li>
+                        <li>☑️ Las texturas están empaquetadas o tienen rutas relativas</li>
+                    </ul>
                 </div>
             </div>
         </section>
