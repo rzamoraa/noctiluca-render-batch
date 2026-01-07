@@ -163,4 +163,64 @@ MIT License
 
 ## 👤 Autor
 
-rzamoraa
+Rodolfo Zamora (rzamoraa)
+
+---
+
+## 🔄 Sistema de Auto-Actualización
+
+Los ejecutables (`.exe`) descargan automáticamente la última versión desde GitHub al iniciar.
+
+### ¿Qué se actualiza automáticamente?
+
+| Archivo | Se actualiza solo | Necesita recompilar .exe |
+|---------|-------------------|--------------------------|
+| `worker.py` | ✅ Sí | ❌ No |
+| `manager.py` | ✅ Sí | ❌ No |
+| `index.html` | ✅ Sí | ❌ No |
+| `worker_launcher.py` | ❌ No | ✅ Sí |
+| `manager_launcher.py` | ❌ No | ✅ Sí |
+| Iconos (.ico) | ❌ No | ✅ Sí |
+
+### Flujo de desarrollo
+
+```
+1. Modificas worker.py, manager.py o index.html en VS Code
+2. git add -A && git commit -m "mensaje" && git push
+3. Los ejecutables descargan la nueva versión al reiniciar
+```
+
+### Archivos en cada PC
+
+**PC Manager:**
+```
+📁 Manager/
+   NoctilucaManager.exe    ← Solo este se distribuye una vez
+   manager.py              ← Se descarga automáticamente
+   index.html              ← Se descarga automáticamente
+```
+
+**PC Workers (nodos):**
+```
+📁 Worker/
+   NoctilucaWorker.exe     ← Solo este se distribuye una vez
+   worker_config.xml       ← Configurar manualmente (IP, nombre, Blender)
+   worker.py               ← Se descarga automáticamente
+```
+
+### Recompilar ejecutables (solo si cambias los launchers)
+
+```bash
+# Worker
+cd worker
+py -m PyInstaller --onefile --name "NoctilucaWorker" --console --icon="workerico.ico" --hidden-import=xml --hidden-import=xml.etree --hidden-import=xml.etree.ElementTree --hidden-import=ctypes worker_launcher.py
+
+# Manager  
+cd manager
+py -m PyInstaller --onefile --name "NoctilucaManager" --console --icon="managerico.ico" --hidden-import=xml --hidden-import=xml.etree --hidden-import=xml.etree.ElementTree --hidden-import=ctypes --hidden-import=http.server --hidden-import=webbrowser manager_launcher.py
+```
+
+### Versión actual
+- **Worker:** v1.1
+- **Manager:** v1.1
+- **Launcher:** v1.0 pre-release
