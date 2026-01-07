@@ -59,25 +59,59 @@ def check_for_updates(base_path):
     # Obtener hash actual
     current_hash = get_file_hash(worker_path)
     
+    print("")
+    print("=" * 50)
+    print("🔍 VERIFICANDO ACTUALIZACIONES...")
+    print("=" * 50)
+    
+    if current_hash:
+        print(f"📄 Archivo local: {LOCAL_WORKER}")
+        print(f"🔑 Hash local:    {current_hash[:16]}...")
+    else:
+        print(f"📄 Archivo local: NO EXISTE (primera ejecución)")
+    
     # Descargar nueva versión a memoria para comparar
     try:
-        print("🔍 Verificando actualizaciones...")
+        print(f"\n🌐 Conectando a GitHub...")
         with urllib.request.urlopen(GITHUB_RAW_URL, timeout=30) as response:
             new_content = response.read()
             new_hash = hashlib.md5(new_content).hexdigest()
             
+            print(f"🔑 Hash remoto:   {new_hash[:16]}...")
+            
             if current_hash != new_hash:
-                print("✨ Nueva versión disponible!")
+                print("")
+                print("╔══════════════════════════════════════════════════╗")
+                print("║     ✨ ¡NUEVA VERSIÓN DISPONIBLE! ✨              ║")
+                print("╚══════════════════════════════════════════════════╝")
+                print(f"📥 Descargando actualización...")
+                
                 # Guardar nueva versión
                 with open(worker_path, 'wb') as f:
                     f.write(new_content)
-                print("✅ Worker actualizado!")
+                
+                print(f"✅ Worker actualizado correctamente!")
+                print(f"📦 Tamaño: {len(new_content)} bytes")
+                print("")
+                time.sleep(2)  # Pausa para que el usuario vea el mensaje
                 return True
             else:
-                print("✅ Worker está actualizado")
+                print("")
+                print("╔══════════════════════════════════════════════════╗")
+                print("║     ✅ WORKER YA ESTÁ ACTUALIZADO                ║")
+                print("╚══════════════════════════════════════════════════╝")
+                print("")
+                time.sleep(1)
                 return False
     except Exception as e:
-        print(f"⚠️ No se pudo verificar actualizaciones: {e}")
+        print("")
+        print("╔══════════════════════════════════════════════════╗")
+        print("║     ⚠️  NO SE PUDO VERIFICAR ACTUALIZACIONES     ║")
+        print("╚══════════════════════════════════════════════════╝")
+        print(f"Error: {e}")
+        print("Continuando con versión local...")
+        print("")
+        time.sleep(2)
         return False
 
 def ensure_config_exists(base_path):
