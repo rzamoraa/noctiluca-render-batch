@@ -355,7 +355,15 @@ class Handler(BaseHTTPRequestHandler):
             # Intentar servir el HTML si es una solicitud del navegador
             if "text/html" in self.headers.get("Accept", ""):
                 try:
-                    html_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "index.html"))
+                    # Buscar index.html en la misma carpeta del ejecutable/script
+                    if getattr(sys, 'frozen', False):
+                        # Ejecutando como .exe
+                        base_path = os.path.dirname(sys.executable)
+                    else:
+                        # Ejecutando como script - buscar en carpeta padre
+                        base_path = os.path.dirname(os.path.dirname(__file__))
+                    
+                    html_path = os.path.join(base_path, "index.html")
                     with open(html_path, 'r', encoding='utf-8') as f:
                         html_content = f.read()
                     self.send_response(200)
