@@ -8,14 +8,20 @@ import sys
 import subprocess
 import time
 import hashlib
+import ctypes
 
 # ============ CONFIGURACIÓN ============
+LAUNCHER_VERSION = "1.0 pre-release"
 GITHUB_RAW_URL = "https://raw.githubusercontent.com/rzamoraa/noctiluca-render-batch/main/worker/worker.py"
 GITHUB_CONFIG_URL = "https://raw.githubusercontent.com/rzamoraa/noctiluca-render-batch/main/worker/worker_config.xml"
 LOCAL_WORKER = "worker.py"
 LOCAL_CONFIG = "worker_config.xml"
 VERSION_FILE = ".worker_version"
 # =======================================
+
+# Establecer título de la consola
+if sys.platform == "win32":
+    ctypes.windll.kernel32.SetConsoleTitleW(f"Noctiluca Worker v{LAUNCHER_VERSION}")
 
 def get_base_path():
     """Obtiene la ruta base del ejecutable o script"""
@@ -138,10 +144,10 @@ def run_worker(base_path):
     return True
 
 def main():
-    print("""
+    print(f"""
     ╔══════════════════════════════════════════════════╗
     ║      🌙 NOCTILUCA RENDER - WORKER LAUNCHER       ║
-    ║              Auto-Update System                  ║
+    ║              v{LAUNCHER_VERSION}                         ║
     ╚══════════════════════════════════════════════════╝
     """)
     

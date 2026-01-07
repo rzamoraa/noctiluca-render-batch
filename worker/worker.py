@@ -7,15 +7,6 @@ import os
 import sys
 import xml.etree.ElementTree as ET
 import socket
-import ctypes
-
-# ============ VERSION ============
-VERSION = "1.0 pre-release"
-# =================================
-
-# Establecer título de la consola
-if sys.platform == "win32":
-    ctypes.windll.kernel32.SetConsoleTitleW(f"Noctiluca Worker v{VERSION}")
 
 try:
     import psutil
@@ -216,8 +207,6 @@ def main_loop():
             time.sleep(2)
 
 # ============ INICIO DEL WORKER ============
-print(f"=" * 50)
-print(f"  NOCTILUCA WORKER v{VERSION}")
 print(f"=" * 50)
 print(f"Worker: {WORKER_NAME}")
 print(f"Manager: {MANAGER_URL}")
