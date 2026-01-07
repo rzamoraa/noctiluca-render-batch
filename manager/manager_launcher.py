@@ -12,7 +12,9 @@ import ctypes
 # ============ CONFIGURACIÓN ============
 LAUNCHER_VERSION = "1.0 pre-release"
 GITHUB_RAW_URL = "https://raw.githubusercontent.com/rzamoraa/noctiluca-render-batch/main/manager/manager.py"
+GITHUB_INDEX_URL = "https://raw.githubusercontent.com/rzamoraa/noctiluca-render-batch/main/index.html"
 LOCAL_MANAGER = "manager.py"
+LOCAL_INDEX = "index.html"
 # =======================================
 
 # Establecer título de la consola
@@ -36,64 +38,64 @@ def get_file_hash(filepath):
 def check_for_updates(base_path):
     """Verifica si hay actualizaciones disponibles"""
     manager_path = os.path.join(base_path, LOCAL_MANAGER)
-    
-    # Obtener hash actual
-    current_hash = get_file_hash(manager_path)
+    index_path = os.path.join(base_path, LOCAL_INDEX)
     
     print("")
     print("=" * 50)
     print("🔍 VERIFICANDO ACTUALIZACIONES...")
     print("=" * 50)
     
-    if current_hash:
-        print(f"📄 Archivo local: {LOCAL_MANAGER}")
-        print(f"🔑 Hash local:    {current_hash[:16]}...")
-    else:
-        print(f"📄 Archivo local: NO EXISTE (primera ejecución)")
+    # ---- Actualizar manager.py ----
+    current_hash = get_file_hash(manager_path)
     
-    # Descargar nueva versión a memoria para comparar
+    if current_hash:
+        print(f"📄 {LOCAL_MANAGER}: {current_hash[:16]}...")
+    else:
+        print(f"📄 {LOCAL_MANAGER}: NO EXISTE")
+    
     try:
-        print(f"\n🌐 Conectando a GitHub...")
+        print(f"🌐 Conectando a GitHub...")
         with urllib.request.urlopen(GITHUB_RAW_URL, timeout=30) as response:
             new_content = response.read()
             new_hash = hashlib.md5(new_content).hexdigest()
             
-            print(f"🔑 Hash remoto:   {new_hash[:16]}...")
-            
             if current_hash != new_hash:
-                print("")
-                print("╔══════════════════════════════════════════════════╗")
-                print("║     ✨ ¡NUEVA VERSIÓN DISPONIBLE! ✨              ║")
-                print("╚══════════════════════════════════════════════════╝")
-                print(f"📥 Descargando actualización...")
-                
-                # Guardar nueva versión
                 with open(manager_path, 'wb') as f:
                     f.write(new_content)
-                
-                print(f"✅ Manager actualizado correctamente!")
-                print(f"📦 Tamaño: {len(new_content)} bytes")
-                print("")
-                time.sleep(2)
-                return True
+                print(f"✅ {LOCAL_MANAGER} actualizado! ({len(new_content)} bytes)")
             else:
-                print("")
-                print("╔══════════════════════════════════════════════════╗")
-                print("║     ✅ MANAGER YA ESTÁ ACTUALIZADO               ║")
-                print("╚══════════════════════════════════════════════════╝")
-                print("")
-                time.sleep(1)
-                return False
+                print(f"✅ {LOCAL_MANAGER} está actualizado")
     except Exception as e:
-        print("")
-        print("╔══════════════════════════════════════════════════╗")
-        print("║     ⚠️  NO SE PUDO VERIFICAR ACTUALIZACIONES     ║")
-        print("╚══════════════════════════════════════════════════╝")
-        print(f"Error: {e}")
-        print("Continuando con versión local...")
-        print("")
-        time.sleep(2)
-        return False
+        print(f"⚠️ No se pudo actualizar {LOCAL_MANAGER}: {e}")
+    
+    # ---- Actualizar index.html ----
+    current_index_hash = get_file_hash(index_path)
+    
+    if current_index_hash:
+        print(f"📄 {LOCAL_INDEX}: {current_index_hash[:16]}...")
+    else:
+        print(f"📄 {LOCAL_INDEX}: NO EXISTE")
+    
+    try:
+        with urllib.request.urlopen(GITHUB_INDEX_URL, timeout=30) as response:
+            new_index_content = response.read()
+            new_index_hash = hashlib.md5(new_index_content).hexdigest()
+            
+            if current_index_hash != new_index_hash:
+                with open(index_path, 'wb') as f:
+                    f.write(new_index_content)
+                print(f"✅ {LOCAL_INDEX} actualizado! ({len(new_index_content)} bytes)")
+            else:
+                print(f"✅ {LOCAL_INDEX} está actualizado")
+    except Exception as e:
+        print(f"⚠️ No se pudo actualizar {LOCAL_INDEX}: {e}")
+    
+    print("")
+    print("╔══════════════════════════════════════════════════╗")
+    print("║     ✅ VERIFICACIÓN COMPLETADA                   ║")
+    print("╚══════════════════════════════════════════════════╝")
+    print("")
+    time.sleep(1)
 
 def run_manager(base_path):
     """Ejecuta el manager"""
